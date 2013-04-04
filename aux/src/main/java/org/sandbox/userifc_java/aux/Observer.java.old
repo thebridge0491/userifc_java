@@ -1,0 +1,55 @@
+package org.sandbox.userifc_java.aux;
+
+//import java.util.Observer;
+
+/** DocComment:
+ * <p>Brief description.</p> */
+public class Observer implements java.util.Observer {
+    /** Constructor.
+      */
+    public Observer() {
+        
+    }
+    
+    /** Accessor for data.
+     * @return data */
+    public String getData() { return this.data;
+    }
+    
+    /** Mutator for data. */
+    public void setData(String newData) { this.data = newData;
+    }
+    
+    private boolean equalObjects(Observer other) {
+        return this.data.equals(other.data);
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (null == obj || getClass() != obj.getClass())
+            return false;
+        return equalObjects((Observer)obj);
+    }
+    
+    @Override
+    public int hashCode() {
+        final int primeMul = 31;
+        int primeAdd = 17;
+        return primeMul * (
+            primeAdd + ((null != this.data) ? this.data.hashCode() : 0));
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s{data=%s}", 
+            this.getClass().getSimpleName(), this.data);
+    }
+    
+    @Override
+    public void update(java.util.Observable src, Object arg) {
+        this.data = (String)arg;
+    }
+    
+    private String data;
+}
