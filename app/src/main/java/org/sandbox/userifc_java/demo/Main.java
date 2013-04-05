@@ -4,7 +4,12 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.gnome.gtk.Gtk;
+import org.gnome.gtk.TextView;
+import org.freedesktop.bindings.Version;
+
 import org.sandbox.intro_java.util.Library;
+import org.sandbox.userifc_java.gtk.HelloController;
 
 /** DocComment:
  * <p>Introduction, basic syntax/features.</p> */
@@ -17,6 +22,10 @@ public class Main {
 	}
 	private static final Logger rootLogger = LoggerFactory.getLogger(
 		Main.class.getName());
+	
+	private static interface IRunMethod{ public void run_method(
+		String progname, String rsrc_path, String name);
+	}
     
     private static void run_demo(String progname, String rsrc_path,
             String name) {
@@ -34,20 +43,44 @@ public class Main {
         greetStr = Demo.greeting(rsrc_path, greetFile, name);
         System.out.format("%s\n%s!\n", dt1.toString(), greetStr);
     }
-	
+    
+    private static void run_demo_gtk(String progname, String rsrc_path,
+            String name) {
+        Gtk.init(null);
+    
+        long timeIn_mSecs = System.currentTimeMillis();
+        String greetFile = "greet.txt";
+        java.util.Date dt1 = new java.util.Date(timeIn_mSecs);
+        
+        java.util.regex.Pattern re = java.util.regex.Pattern.compile(
+        //  "quit", java.util.regex.Pattern.CASE_INSENSITIVE);
+            "(?i)quit");
+        java.util.regex.Matcher m = re.matcher(name);
+        String pretext = String.format("%s match: %s to %s\n(Java %s) Java-Gnome version %s\n%s\n",
+            m.matches() ? "Good" : "Does not", name, re.pattern(),
+            System.getProperty("java.version"), Version.getVersion(),
+            dt1.toString());
+        HelloController uicontroller = new HelloController(greetFile,
+            rsrc_path);
+        ((TextView)uicontroller.getView1().widgets.get("textview1"
+            )).getBuffer().setText(pretext);
+        
+        Gtk.main();
+    }
+    
     private static void printUsage(String str, int status) {
-        System.err.format("Usage: java %s [-h][-u name]\n",
-			Main.class.getName());
+        System.err.format("Usage: java %s [-h][-u name][-i ifc]\n",
+            Main.class.getName());
         System.err.println(str);
         System.exit(status);
     }
 
-	private static void parse_cmdopts(Map<String, String> optsMap, 
+    private static void parse_cmdopts(Map<String, String> optsMap, 
             String[] args) {
         String option = null;
-		rootLogger.info("parse_cmdopts()");
+        rootLogger.info("parse_cmdopts()");
         for (int i = 0, size = args.length; size > i; ++i) {
-			option = args[i];
+            option = args[i];
               
             if ('-' != option.charAt(0) || 1 == option.length())
                 printUsage("Not an option: " + option, 1);
@@ -59,9 +92,14 @@ public class Main {
                         printUsage("Missing argument for " + option, 1);
                     optsMap.put("name", args[++i]);
                     break;
+                case 'i': 
+                    if ((size <= i + 1) || ('-' == args[i + 1].charAt(0)))
+                        printUsage("Missing argument for " + option, 1);
+                    optsMap.put("ifc", args[++i]);
+                    break;
                 default: printUsage("Unknown option: " + option, 1);
-          	}
-		}
+            }
+        }
     }
 
     /** Brief description.
@@ -70,7 +108,7 @@ public class Main {
 		@SuppressWarnings("unchecked")
 		Map<String, String> optsMap = new HashMap<String, String>() {
 		    static final long serialVersionUID = 660L;
-		    { put("name", "World"); }
+		    { put("name", "World"); put("ifc", "term"); }
 		};
         parse_cmdopts(optsMap, args);
 	    
@@ -128,8 +166,32 @@ public class Main {
 			System.out.format("domain: %s\n", tup_arr[i][1]);
 			System.out.format("user1Name: %s\n\n", tup_arr[i][2]);
 		}
-    	
-    	run_demo(Main.class.getName(), rsrc_path, optsMap.get("name"));
+        
+        /*switch (optsMap.get("ifc")) {
+            case "gtk":
+                run_demo_gtk(Main.class.getName(), rsrc_path,
+                    optsMap.get("name"));
+            default:
+                run_demo(Main.class.getName(), rsrc_path,
+                    optsMap.get("name"));
+        }*/
+        Map<String, IRunMethod> switcher = new HashMap<String, IRunMethod>() {
+            //static final long serialVersionUID = 1060L;
+            //{ put("term", run_demo); put("gtk", run_demo_gtk); }
+            {put("term", new IRunMethod(){public void run_method(
+					String progname, String rsrc_path, String name) {
+				run_demo(progname, rsrc_path, name); }});
+			put("gtk", new IRunMethod(){public void run_method(
+					String progname, String rsrc_path, String name) {
+				run_demo_gtk(progname, rsrc_path, name); }});
+			}
+        };
+        IRunMethod func = switcher.getOrDefault(optsMap.get("ifc"),
+            new IRunMethod(){public void run_method(String progname,
+					String rsrc_path, String name) {
+				run_demo(progname, rsrc_path, name); }});
+        func.run_method(Main.class.getName(), rsrc_path, optsMap.get("name"));
+        //run_demo(Main.class.getName(), rsrc_path, optsMap.get("name"));
 	    
 	    rootLogger.debug("exiting main()");
     }

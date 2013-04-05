@@ -18,6 +18,7 @@
     <module>parent</module>
     <module>common</module>-->
     <module>aux</module>
+    <module>gtk</module>
     <module>app</module>
   </modules>
 </project>

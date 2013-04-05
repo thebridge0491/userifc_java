@@ -23,18 +23,18 @@
     <artifactId>intro_java-parent</artifactId> <version>0</version>
     <relativePath></relativePath> </parent>
   <!--<groupId>org.sandbox</groupId>-->
-  <artifactId>userifc_java-demo</artifactId>
+  <artifactId>userifc_java-gtk</artifactId>
   <version>0.1.0</version>
   
-  <name>Userifc_java::Demo</name>
-  <description>Main app sub-package for Java User interface examples project.</description>
+  <name>Userifc_java::Gtk</name>
+  <description>Gtk sub-package for Java User interface examples project.</description>
   <url>https://bitbucket.org/thebridge0491/userifc_java</url>
   
   <properties>
     <!--<scala.compat>2.9</scala.compat>-->
     <maven.prereq>3.0.4</maven.prereq>
     
-    <project.package>org.sandbox.userifc_java.demo</project.package>
+    <project.package>org.sandbox.userifc_java.gtk</project.package>
   </properties>
   
   <prerequisites>
@@ -117,13 +117,6 @@
     <!--<dependency> <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId> </dependency>-->
     
-    <dependency> <groupId>javax.json</groupId>
-      <artifactId>javax.json-api</artifactId> </dependency>
-    <dependency> <groupId>org.glassfish</groupId>
-      <artifactId>javax.json</artifactId> </dependency>
-    <dependency> <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId> </dependency>
-    
     <dependency> <groupId>org.sandbox</groupId>
       <artifactId>intro_java-util</artifactId>
       <version>0.1.0</version> </dependency>
@@ -135,7 +128,7 @@
     </dependency>
     
     <dependency> <groupId>org.sandbox</groupId>
-      <artifactId>userifc_java-gtk</artifactId>
+      <artifactId>userifc_java-aux</artifactId>
       <version>0.1.0</version> </dependency>
   </dependencies>
   
@@ -159,7 +152,7 @@
       </plugin>
 	  <!--<plugin> <artifactId>maven-surefire-plugin</artifactId> </plugin>-->
       <plugin> <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
+        <!--<configuration>
           <archive combine.self = 'override'>
             <index>false</index>
             <manifestEntries><Built-By></Built-By></manifestEntries>
@@ -171,7 +164,7 @@
               <packageName>${project.package}</packageName>
             </manifest>
           </archive>
-        </configuration>
+        </configuration>-->
       </plugin>
 	  <plugin> <artifactId>maven-source-plugin</artifactId> </plugin>
 	  <plugin> <artifactId>maven-assembly-plugin</artifactId> </plugin>
