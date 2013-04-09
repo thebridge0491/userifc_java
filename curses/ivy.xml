@@ -46,14 +46,14 @@
     xmlns:xsi = 'http://www.w3.org/2001/XMLSchema-instance'
     xsi:noNamespaceSchemaLocation = 'http://ant.apache.org/ivy/schemas/ivy.xsd'
     xmlns:m = 'http://ant.apache.org/ivy/maven'>
-  <info module = 'userifc_java-demo' revision = '0.1.0'>
+  <info module = 'userifc_java-curses' revision = '0.1.0'>
     <!--<extends location = '../parent/ivy.xml'-->
     <extends extendType = 'all' revision = '+'
         organisation = 'org.sandbox' module = 'intro_java-parent'/>
     <license name = 'Apache-2.0'
       url = 'https://opensource.org/licenses/Apache-2.0'/>
     <description homepage = 'https://bitbucket.org/thebridge0491/userifc_java'>
-      Main app sub-package for Java User interface examples project.
+      Curses sub-package for Java User interface example project.
     </description>
   </info>
   <!--<configurations defaultconfmapping = 'default'>
@@ -68,9 +68,9 @@
     <conf name = 'optional' description = 'optional depns'/>
   </configurations>-->
   <!--<publications>
-    <artifact name = 'userifc_java-demo' type = 'jar' ext = 'jar'
+    <artifact name = 'userifc_java-curses' type = 'jar' ext = 'jar'
         conf = 'master'/>
-    <artifact name = 'userifc_java-demo' type = 'test' ext = 'jar'
+    <artifact name = 'userifc_java-curses' type = 'test' ext = 'jar'
         conf = 'test' m:classifier = 'tests'/>
   </publications>-->
   <dependencies defaultconfmapping = '*->compile,master,default'
@@ -78,10 +78,10 @@
     
     <dependency org = 'org.sandbox' name = 'intro_java-util' rev = '0.1.0'
         revConstraint = '[0.1.0,)'/>
-    <dependency org = 'org.sandbox' name = 'userifc_java-gtk' rev = '0.1.0'
+    <dependency org = 'org.sandbox' name = 'userifc_java-aux' rev = '0.1.0'
         revConstraint = '[0.1.0,)'/>
-    <dependency org = 'org.sandbox' name = 'userifc_java-curses' rev = '0.1.0'
-        revConstraint = '[0.1.0,)'/>
+    <dependency org = 'org.sandbox' name = 'wrapper_java-curses' rev = '2013.04'
+        revConstraint = '[2013.04,)'/>
     
     <exclude org = 'org.scalatest'/>
     <exclude org = 'org.scalacheck'/>
@@ -91,12 +91,8 @@
     <!--<exclude org = 'ch.qos.logback' module = 'logback-classic'/>-->
     <exclude org = 'org.ini4j' module = 'ini4j'/>
     <exclude org = 'net.java.dev.jna' module = 'jna'/>
-    
-    <dependency org = 'org.gnome' name = 'java-gnome' rev = '4.1'
-      revConstraint = '[4.1,)'>
-      <artifact type = 'jar' ext = 'jar'
-        url = "file://${user.home}/.ant/repo/org/gnome/java-gnome/4.1/java-gnome-4.1.jar"
-        name = 'java-gnome'/>
-    </dependency>
+    <exclude org = 'javax.json' module = 'javax.json-api'/>
+    <exclude org = 'org.glassfish' module = 'javax.json'/>
+    <exclude org = 'org.yaml' module = 'snakeyaml'/>
   </dependencies>
 </ivy-module>

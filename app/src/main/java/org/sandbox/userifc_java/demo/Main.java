@@ -8,8 +8,13 @@ import org.gnome.gtk.Gtk;
 import org.gnome.gtk.TextView;
 import org.freedesktop.bindings.Version;
 
+import org.sandbox.wrapper_java.curses.CursesC;
+import org.sandbox.wrapper_java.curses.SWIGTYPE_p_WINDOW;
+import org.sandbox.wrapper_java.curses.SWIGTYPE_p_PANEL;
+
 import org.sandbox.intro_java.util.Library;
-import org.sandbox.userifc_java.gtk.HelloController;
+//import org.sandbox.userifc_java.gtk.HelloController;
+//import org.sandbox.userifc_java.curses.HelloController;
 
 /** DocComment:
  * <p>Introduction, basic syntax/features.</p> */
@@ -60,12 +65,38 @@ public class Main {
             m.matches() ? "Good" : "Does not", name, re.pattern(),
             System.getProperty("java.version"), Version.getVersion(),
             dt1.toString());
-        HelloController uicontroller = new HelloController(greetFile,
+        org.sandbox.userifc_java.gtk.HelloController uicontroller = 
+            new org.sandbox.userifc_java.gtk.HelloController(greetFile,
             rsrc_path);
         ((TextView)uicontroller.getView1().widgets.get("textview1"
             )).getBuffer().setText(pretext);
         
         Gtk.main();
+    }
+    
+    private static void run_demo_curses(String progname, String rsrc_path,
+            String name) {
+        long timeIn_mSecs = System.currentTimeMillis();
+        String greetFile = "greet.txt";
+        java.util.Date dt1 = new java.util.Date(timeIn_mSecs);
+        
+        java.util.regex.Pattern re = java.util.regex.Pattern.compile(
+        //  "quit", java.util.regex.Pattern.CASE_INSENSITIVE);
+            "(?i)quit");
+        java.util.regex.Matcher m = re.matcher(name);
+        String pretext = String.format("%s match: %s to %s\n(Java %s) Curses %s TUI\n%s\n",
+            m.matches() ? "Good" : "Does not", name, re.pattern(),
+            System.getProperty("java.version"), "???",
+            dt1.toString());
+        org.sandbox.userifc_java.curses.HelloController uicontroller = 
+            new org.sandbox.userifc_java.curses.HelloController(greetFile,
+            rsrc_path);
+        CursesC.wattron(uicontroller.getView1().stdscr, 
+            org.sandbox.userifc_java.curses.HelloView.Keys.A_REVERSE.value);
+        CursesC.mvwaddstr(uicontroller.getView1().stdscr, 1, 1, pretext);
+        CursesC.wattroff(uicontroller.getView1().stdscr, 
+            org.sandbox.userifc_java.curses.HelloView.Keys.A_REVERSE.value);
+        uicontroller.run();
     }
     
     private static void printUsage(String str, int status) {
@@ -184,6 +215,9 @@ public class Main {
 			put("gtk", new IRunMethod(){public void run_method(
 					String progname, String rsrc_path, String name) {
 				run_demo_gtk(progname, rsrc_path, name); }});
+			put("curses", new IRunMethod(){public void run_method(
+					String progname, String rsrc_path, String name) {
+				run_demo_curses(progname, rsrc_path, name); }});
 			}
         };
         IRunMethod func = switcher.getOrDefault(optsMap.get("ifc"),
