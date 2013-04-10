@@ -33,6 +33,7 @@
   <properties>
     <!--<scala.compat>2.9</scala.compat>-->
     <maven.prereq>3.0.4</maven.prereq>
+    <version.wrappertcltk>2013.04</version.wrappertcltk>
     
     <project.package>org.sandbox.userifc_java.demo</project.package>
   </properties>
@@ -141,6 +142,10 @@
     <dependency> <groupId>org.sandbox</groupId>
       <artifactId>userifc_java-curses</artifactId>
       <version>0.1.0</version> </dependency>
+    
+    <dependency> <groupId>org.sandbox</groupId>
+      <artifactId>wrapper_java-tcltk</artifactId>
+      <version>${version.wrappertcltk}</version> </dependency>
   </dependencies>
   
   <build>

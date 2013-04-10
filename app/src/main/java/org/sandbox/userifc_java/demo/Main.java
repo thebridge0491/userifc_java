@@ -11,6 +11,8 @@ import org.freedesktop.bindings.Version;
 import org.sandbox.wrapper_java.curses.CursesC;
 import org.sandbox.wrapper_java.curses.SWIGTYPE_p_WINDOW;
 import org.sandbox.wrapper_java.curses.SWIGTYPE_p_PANEL;
+import org.sandbox.wrapper_java.tcltk.TcltkC;
+import org.sandbox.wrapper_java.tcltk.SWIGTYPE_p_Tcl_Interp;
 
 import org.sandbox.intro_java.util.Library;
 //import org.sandbox.userifc_java.gtk.HelloController;
@@ -99,22 +101,77 @@ public class Main {
         uicontroller.run();
     }
     
+    private static int tk_AppInit(SWIGTYPE_p_Tcl_Interp interp) {
+		if (TcltkC.Tcl_Init(interp) != 0) {
+		  	System.err.printf("Error: Initializing Tcl!\n");
+		  	return 1;
+		}
+		if (TcltkC.Tk_Init(interp) != 0) {
+		  	System.err.printf("Error: Initializing Tk!\n");
+		  	return 1;
+		}
+		return 0;
+	}
+    
+    private static void run_demo_tcltk(String progname, String rsrc_path,
+            String name, String[] extrav) {
+        long timeIn_mSecs = System.currentTimeMillis();
+        String greetFile = "greet.txt";
+        java.util.Date dt1 = new java.util.Date(timeIn_mSecs);
+        
+        java.util.regex.Pattern re = java.util.regex.Pattern.compile(
+        //  "quit", java.util.regex.Pattern.CASE_INSENSITIVE);
+            "(?i)quit");
+        java.util.regex.Matcher m = re.matcher(name);
+        String pretext = String.format("%s match: %s to %s\n(Java %s) Tcl/Tk %s\n%s\n",
+            m.matches() ? "Good" : "Does not", name, re.pattern(),
+            System.getProperty("java.version"), "???",
+            dt1.toString());
+        
+        String uiform = (null == extrav || 1 > extrav.length) ?
+		  	rsrc_path + "/" + "tcltk/helloForm-tk.tcl" : 
+		  	rsrc_path + "/" + extrav[0];
+		String[] defaultArgs = {"--", uiform};
+		String[] tkArgs = new String[(null == extrav || 1 > extrav.length) ?
+		    3 : extrav.length+1];
+		System.arraycopy(defaultArgs, 0, tkArgs, 0, 2);
+	
+		if (null == extrav || 1 > extrav.length)
+		  	tkArgs[2] = "-name=helloForm-tk";
+		else
+		  	System.arraycopy(extrav, 1, tkArgs, 2, extrav.length-1);
+	
+		SWIGTYPE_p_Tcl_Interp interp = TcltkC.Tcl_CreateInterp();
+		tk_AppInit(interp);
+		TcltkC.Tcl_Eval(interp, String.format("set argv {%s}",
+			String.join(" ", Arrays.copyOfRange(tkArgs, 2, tkArgs.length))));
+		//TcltkC.Tcl_EvalFile(interp, tkArgs[1]);
+		TcltkC.Tcl_Eval(interp, String.format("source %s", tkArgs[1]));
+		TcltkC.Tcl_Eval(interp, "if {![winfo exists .frame1]} {lib_main}");
+		TcltkC.Tk_MainLoop();
+		//TcltkC.Tk_Main(tkArgs.length, tkArgs, Main.&tk_AppInit); // ???
+    }
+    
     private static void printUsage(String str, int status) {
-        System.err.format("Usage: java %s [-h][-u name][-i ifc]\n",
+        System.err.format("Usage: java %s [-h][-u name][-i ifc][extrafile [extraopts ..]]\n",
             Main.class.getName());
         System.err.println(str);
         System.exit(status);
     }
 
-    private static void parse_cmdopts(Map<String, String> optsMap, 
+    private static String[] parse_cmdopts(Map<String, String> optsMap, 
             String[] args) {
         String option = null;
+        java.util.List<String> extra = new java.util.LinkedList<String>();
         rootLogger.info("parse_cmdopts()");
         for (int i = 0, size = args.length; size > i; ++i) {
             option = args[i];
               
-            if ('-' != option.charAt(0) || 1 == option.length())
-                printUsage("Not an option: " + option, 1);
+            if ('-' != option.charAt(0) || 1 == option.length()) {
+                //printUsage("Not an option: " + option, 1);
+                extra.add(option);
+                continue;
+            }
             switch (option.charAt(1)) {
                 case 'h': printUsage("", 0);
                     break;
@@ -128,9 +185,11 @@ public class Main {
                         printUsage("Missing argument for " + option, 1);
                     optsMap.put("ifc", args[++i]);
                     break;
-                default: printUsage("Unknown option: " + option, 1);
+                default: //printUsage("Unknown option: " + option, 1);
+                    extra.add(option);
             }
         }
+        return extra.toArray(new String[0]);
     }
 
     /** Brief description.
@@ -141,7 +200,7 @@ public class Main {
 		    static final long serialVersionUID = 660L;
 		    { put("name", "World"); put("ifc", "term"); }
 		};
-        parse_cmdopts(optsMap, args);
+        String[] extrav = parse_cmdopts(optsMap, args);
 	    
 	    String rsrc_path = null != System.getenv("RSRC_PATH") ? 
 			System.getenv("RSRC_PATH") :
@@ -218,6 +277,9 @@ public class Main {
 			put("curses", new IRunMethod(){public void run_method(
 					String progname, String rsrc_path, String name) {
 				run_demo_curses(progname, rsrc_path, name); }});
+			put("tcltk", new IRunMethod(){public void run_method(
+					String progname, String rsrc_path, String name) {
+				run_demo_tcltk(progname, rsrc_path, name, extrav); }});
 			}
         };
         IRunMethod func = switcher.getOrDefault(optsMap.get("ifc"),

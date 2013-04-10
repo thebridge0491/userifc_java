@@ -82,6 +82,8 @@
         revConstraint = '[0.1.0,)'/>
     <dependency org = 'org.sandbox' name = 'userifc_java-curses' rev = '0.1.0'
         revConstraint = '[0.1.0,)'/>
+    <dependency org = 'org.sandbox' name = 'wrapper_java-tcltk' rev = '2013.04'
+        revConstraint = '[2013.04,)'/>
     
     <exclude org = 'org.scalatest'/>
     <exclude org = 'org.scalacheck'/>
