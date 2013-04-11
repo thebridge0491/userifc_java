@@ -8,6 +8,8 @@ import org.gnome.gtk.Gtk;
 import org.gnome.gtk.TextView;
 import org.freedesktop.bindings.Version;
 
+import javax.swing.JTextArea;
+
 import org.sandbox.wrapper_java.curses.CursesC;
 import org.sandbox.wrapper_java.curses.SWIGTYPE_p_WINDOW;
 import org.sandbox.wrapper_java.curses.SWIGTYPE_p_PANEL;
@@ -17,6 +19,7 @@ import org.sandbox.wrapper_java.tcltk.SWIGTYPE_p_Tcl_Interp;
 import org.sandbox.intro_java.util.Library;
 //import org.sandbox.userifc_java.gtk.HelloController;
 //import org.sandbox.userifc_java.curses.HelloController;
+//import org.sandbox.userifc_java.swing.HelloController;
 
 /** DocComment:
  * <p>Introduction, basic syntax/features.</p> */
@@ -152,6 +155,30 @@ public class Main {
 		//TcltkC.Tk_Main(tkArgs.length, tkArgs, Main.&tk_AppInit); // ???
     }
     
+    private static void run_demo_swing(String progname, String rsrc_path,
+            String name) {
+        long timeIn_mSecs = System.currentTimeMillis();
+        String greetFile = "greet.txt";
+        java.util.Date dt1 = new java.util.Date(timeIn_mSecs);
+        
+        java.util.regex.Pattern re = java.util.regex.Pattern.compile(
+        //  "quit", java.util.regex.Pattern.CASE_INSENSITIVE);
+            "(?i)quit");
+        java.util.regex.Matcher m = re.matcher(name);
+        String pretext = String.format("%s match: %s to %s\nJava %s Swing\n%s\n",
+            m.matches() ? "Good" : "Does not", name, re.pattern(),
+            System.getProperty("java.version"),
+            dt1.toString());
+        /*java.awt.EventQueue.invokeLater(
+            new org.sandbox.userifc_java.swing.HelloController.App(greetFile,
+            rsrc_path, pretext));*/
+        org.sandbox.userifc_java.swing.HelloController uicontroller = 
+            new org.sandbox.userifc_java.swing.HelloController(greetFile,
+            rsrc_path);
+        ((JTextArea)uicontroller.getView1().widgets.get("textview1"
+            )).setText(pretext);
+    }
+    
     private static void printUsage(String str, int status) {
         System.err.format("Usage: java %s [-h][-u name][-i ifc][extrafile [extraopts ..]]\n",
             Main.class.getName());
@@ -280,6 +307,9 @@ public class Main {
 			put("tcltk", new IRunMethod(){public void run_method(
 					String progname, String rsrc_path, String name) {
 				run_demo_tcltk(progname, rsrc_path, name, extrav); }});
+			put("swing", new IRunMethod(){public void run_method(
+					String progname, String rsrc_path, String name) {
+				run_demo_swing(progname, rsrc_path, name); }});
 			}
         };
         IRunMethod func = switcher.getOrDefault(optsMap.get("ifc"),

@@ -1,14 +1,10 @@
-package org.sandbox.userifc_java.gtk;
+package org.sandbox.userifc_java.swing;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import org.gnome.gtk.Gtk;
-import org.gnome.gtk.Button;
-import org.gnome.gtk.TextView;
-import org.gnome.gtk.Dialog;
-import org.gnome.gtk.Entry;
-import org.gnome.gtk.ResponseType;
+import javax.swing.*;
+import java.awt.event.*;
 
 import org.sandbox.intro_java.util.Library;
 import org.sandbox.userifc_java.aux.Observer;
@@ -23,9 +19,6 @@ public class ViewControllerTest {
     }
     
 	public void refreshUI(int delayMsecs) {
-		while (Gtk.eventsPending())
-			//(new org.gnome.gtk.Application("Test.app")).run(null);
-			Gtk.mainIterationDo(false);
 		try {
 			Thread.sleep(delayMsecs);
 		} catch (InterruptedException exc) {
@@ -35,7 +28,6 @@ public class ViewControllerTest {
 
     @org.junit.BeforeClass
     public static void setUpClass() throws Exception {
-    	Gtk.init(null);
     	String rsrc_path = null != System.getenv("RSRC_PATH") ? 
             System.getenv("RSRC_PATH") :
             System.getProperty("rsrcPath", "src/main/resources");
@@ -70,50 +62,52 @@ public class ViewControllerTest {
     }
     
 	@Test
-    public void test_button1Clicked() {
-		((Button)this.uicontroller.getView1().widgets.get(
-		    "button1")).emitClicked();
-		refreshUI(delaymsecs);
-		Dialog dialog1 = (Dialog)uicontroller.getView1().widgets.get(
-		    "dialog1");
-		TextView textview1 = (TextView)uicontroller.getView1().widgets.get(
-		    "textview1");
-		Entry entry1 = (Entry)uicontroller.getView1().widgets.get("entry1");
-		assertTrue("dialog1 and textview1 not visible",
-		    dialog1.getWindow().isViewable() && 
-		    textview1.getWindow().isViewable());
-		assertEquals("entry1.text != ''", "", entry1.getText());
-    }
-    @Test
-    public void test_dialog1Response() {
-        Dialog dialog1 = (Dialog)uicontroller.getView1().widgets.get(
-            "dialog1");
-        dialog1.show();
-        
-        dialog1.emitResponse(ResponseType.OK);
+    public void test_onButton1Action() {
+        ((JButton)this.uicontroller.getView1().widgets.get(
+		    "button1")).doClick();
         refreshUI(delaymsecs);
-        assertTrue("dialog1 visible", !dialog1.getWindow().isViewable());
+        JDialog dialog1 = (JDialog)uicontroller.getView1().widgets.get(
+		    "dialog1");
+		JFrame frame1 = (JFrame)uicontroller.getView1().widgets.get(
+		    "frame1");
+		assertTrue("dialog1 not visible", dialog1.isVisible());
+		//assertTrue("frame1 visible", !frame1.isVisible());
+		assertTrue("dialog1 not visible and frame1 not visible",
+		    dialog1.isVisible() && frame1.isVisible());
+		JTextField entry1 = (JTextField)uicontroller.getView1().widgets.get(
+		    "entry1");
+		assertEquals("entry1.getText() != ''", "", entry1.getText());
     }
     @Test
-    public void test_entry1Activate() {
-        Dialog dialog1 = (Dialog)uicontroller.getView1().widgets.get(
-            "dialog1");
-        Entry entry1 = (Entry)uicontroller.getView1().widgets.get("entry1");
-        dialog1.show();
+    public void test_onDialog1Close() {
+        JDialog dialog1 = (JDialog)uicontroller.getView1().widgets.get(
+		    "dialog1");
+		dialog1.setVisible(true);
+		
+		dialog1.dispose();
+		refreshUI(delaymsecs);
+		assertTrue("dialog1 visible", !dialog1.isVisible());
+    }
+    @Test
+    public void test_onEntry1Action() {
+        JTextField entry1 = (JTextField)uicontroller.getView1().widgets.get(
+            "entry1");
+        JDialog dialog1 = (JDialog)uicontroller.getView1().widgets.get(
+		    "dialog1");
+		JTextArea textview1 = (JTextArea)uicontroller.getView1().widgets.get(
+            "textview1");
+        dialog1.setVisible(true);
         entry1.setText("John Doe");
         
-        entry1.activate();
+        entry1.postActionEvent();
         refreshUI(delaymsecs);
-        TextView textview1 = (TextView)uicontroller.getView1().widgets.get(
-            "textview1");
         /*//for (Observer obs : this.uicontroller.getModel().observers) {
         for (java.beans.PropertyChangeListener obs : this.uicontroller.getModel().observers)
-            assertEquals("textview1.buffer != obs[n].data",
+            assertEquals("textview1.getText() != obs[n].getData()",
                 ((Observer)obs).getData(),
                 this.uicontroller.getView1().getData());*/
-        assertEquals("textview1.buffer != view1.data",
-            textview1.getBuffer().getText(),
-            this.uicontroller.getView1().getData());
-        assertTrue("dialog1 visible", !dialog1.getWindow().isViewable());
+        assertEquals("textview1.getText() != view1.getData()",
+            textview1.getText(), this.uicontroller.getView1().getData());
+        assertTrue("dialog1 visible", !dialog1.isVisible());
     }
 }
