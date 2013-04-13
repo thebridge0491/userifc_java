@@ -10,6 +10,9 @@ import org.freedesktop.bindings.Version;
 
 import javax.swing.JTextArea;
 
+import javafx.scene.control.TextArea;
+import javafx.application.Application;
+
 import org.sandbox.wrapper_java.curses.CursesC;
 import org.sandbox.wrapper_java.curses.SWIGTYPE_p_WINDOW;
 import org.sandbox.wrapper_java.curses.SWIGTYPE_p_PANEL;
@@ -179,6 +182,45 @@ public class Main {
             )).setText(pretext);
     }
     
+    public static class JfxApp extends Application {
+        @Override
+        public void start(javafx.stage.Stage stagePrime) {
+            Application.Parameters params = this.getParameters();
+            String param0 = params.getRaw().size() > 0 ?
+                params.getRaw().get(0) : "";
+            
+            org.sandbox.userifc_java.javafx.HelloController gui = 
+            	new org.sandbox.userifc_java.javafx.HelloController(
+            	stagePrime, params.getNamed().get("greetFile"),
+                params.getNamed().get("rsrc_path"));
+        	((TextArea)gui.getView1().widgets.get("textview1")).setText(
+        	    params.getNamed().get("pretext"));
+            stagePrime.setScene(new javafx.scene.Scene(gui.getView1().parent,
+            	200, 160));
+            stagePrime.show();
+        }
+    }
+    
+    private static void run_demo_javafx(String progname, String rsrc_path,
+            String name) {
+        long timeIn_mSecs = System.currentTimeMillis();
+        String greetFile = "greet.txt";
+        java.util.Date dt1 = new java.util.Date(timeIn_mSecs);
+        
+        java.util.regex.Pattern re = java.util.regex.Pattern.compile(
+        //  "quit", java.util.regex.Pattern.CASE_INSENSITIVE);
+            "(?i)quit");
+        java.util.regex.Matcher m = re.matcher(name);
+        String pretext = String.format("%s match: %s to %s\n(Java %s) JavaFX %s GUI\n%s\n",
+            m.matches() ? "Good" : "Does not", name, re.pattern(),
+            System.getProperty("java.version"),
+            System.getProperty("javafx.version"), dt1.toString());
+        String[] params = {"--greetFile=" + greetFile,
+            "--rsrc_path=" + rsrc_path, "--pretext=" + pretext};
+        //JfxApp.launch(JfxApp.class, params);
+        Application.launch(JfxApp.class, params);
+    }
+    
     private static void printUsage(String str, int status) {
         System.err.format("Usage: java %s [-h][-u name][-i ifc][extrafile [extraopts ..]]\n",
             Main.class.getName());
@@ -310,6 +352,9 @@ public class Main {
 			put("swing", new IRunMethod(){public void run_method(
 					String progname, String rsrc_path, String name) {
 				run_demo_swing(progname, rsrc_path, name); }});
+			put("javafx", new IRunMethod(){public void run_method(
+					String progname, String rsrc_path, String name) {
+				run_demo_javafx(progname, rsrc_path, name); }});
 			}
         };
         IRunMethod func = switcher.getOrDefault(optsMap.get("ifc"),

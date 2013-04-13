@@ -21,6 +21,7 @@
     <module>gtk</module>
     <module>curses</module>
     <module>swing</module>
+    <module>javafx</module>
     <module>app</module>
   </modules>
 </project>

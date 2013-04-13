@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+
+<StackPane fx:id="stackpane1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="208.0" prefWidth="202.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="pane1" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="205.0" prefWidth="198.0" StackPane.alignment="CENTER">
+         <children>
+            <VBox fx:id="vbox1" alignment="CENTER" prefHeight="205.0" prefWidth="195.0">
+               <children>
+                  <Label fx:id="label1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="38.0" prefWidth="173.0" text="label1" />
+                  <Button fx:id="button1" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="48.0" prefWidth="174.0" text="button1" />
+                  <TextArea fx:id="textview1" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="107.0" prefWidth="176.0" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+      <DialogPane fx:id="dialog1" headerText="dialog1" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
+         <content>
+            <TextField fx:id="entry1" promptText="Enter name" />
+         </content>
+      </DialogPane>
+   </children>
+</StackPane>
