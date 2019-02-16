@@ -151,9 +151,9 @@ class HelloJavafxDemo {
 }
 
 
-// groovy -cp <path>/jfxrt.jar HelloJavafxDemo.groovy
+// JAVA_OPTS="--module-path=$JAVAFX_HOME/lib --add-modules=javafx.controls,javafx.fxml" groovy [-cp <path>/pkg.jar] HelloJavafxDemo.groovy
 // or
-// java -cp <path>/groovy.jar:<path>/jfxrt.jar groovy.ui.GroovyMain HelloJavafxDemo.groovy
+// java -cp <path>/groovy.jar --module-path=$JAVAFX_HOME/lib --add-modules=javafx.controls,javafx.fxml groovy.ui.GroovyMain HelloJavafxDemo.groovy
 // or
-// groovyc -d classes -cp <path>/jfxrt.jar HelloJavafxDemo.groovy
-// java -cp <path>/groovy.jar:<path>/jfxrt.jar:classes HelloJavafxDemo
+// JAVA_OPTS="--module-path=$JAVAFX_HOME/lib --add-modules=javafx.controls,javafx.fxml" groovyc -d classes [-cp <path>/pkg.jar] HelloJavafxDemo.groovy
+// java -cp <path>/groovy.jar:classes --module-path=$JAVAFX_HOME/lib --add-modules=javafx.controls,javafx.fxml HelloJavafxDemo

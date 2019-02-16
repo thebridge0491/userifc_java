@@ -19,8 +19,10 @@ version control repository clone:
         
         git clone https://bitbucket.org/thebridge0491/userifc_java.git
 
+MOD_OPTS="--module-path=$JAVAFX_HOME/lib --add-modules=javafx.controls,javafx.fxml"
+
 build example with sbt:
-cd <path> ; sbt [-Djava.library.path=$PREFIX/lib] compile [test:run]
+cd <path> ; JAVA_OPTS="$JAVA_OPTS $MOD_OPTS" sbt [-Djava.library.path=$PREFIX/lib] compile [test:run]
 
 sbt publishLocal
 
@@ -39,17 +41,17 @@ make all [check]
 make publish
 
 build example with ant:
-cd <path> ; ant [-Djava.library.path=$PREFIX/lib] compile [test]
+cd <path> ; ant [-Djava.library.path=$PREFIX/lib] -Djava.args="$MOD_OPTS" compile [test]
 
 ant publish
 
 build example with maven:
-cd <path> ; mvn [-Djava.library.path=$PREFIX/lib] compile [test]
+cd <path> ; mvn [-Djava.library.path=$PREFIX/lib] -DargLine="$MOD_OPTS" compile [test]
 
 mvn install
 
 build example with gradle:
-cd <path> ; gradle [-Djava.library.path=$PREFIX/lib] assemble [check]
+cd <path> ; JAVA_OPTS="$JAVA_OPTS $MOD_OPTS" gradle [-Djava.library.path=$PREFIX/lib] assemble [check]
 
 gradle install
 

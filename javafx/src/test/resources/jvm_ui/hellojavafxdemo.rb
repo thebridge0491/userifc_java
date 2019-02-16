@@ -183,6 +183,6 @@ if $PROGRAM_NAME == __FILE__
 end
 
 
-# jruby -J-cp <path>/jfxrt.jar hellojavafxdemo.rb
+# JAVA_OPTS="--module-path=$JAVAFX_HOME/lib --add-modules=ALL-MODULE-PATH --add-opens=javafx.graphics/com.sun.javafx.embed=ALL-UNNAMED" jruby [-J-cp <path>/pkg.jar] hellojavafxdemo.rb
 # or
-# java -cp <path>/jruby-complete.jar:<path>/jfxrt.jar org.jruby.Main hellojavafxdemo.rb
+# java -cp <path>/jruby-complete.jar --module-path=$JAVAFX_HOME/lib --add-modules=ALL-MODULE-PATH --add-opens=javafx.graphics/com.sun.javafx.embed=ALL-UNNAMED org.jruby.Main hellojavafxdemo.rb

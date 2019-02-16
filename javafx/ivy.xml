@@ -40,6 +40,8 @@
   
   <!ENTITY version.jsonp '1.0'>
   <!ENTITY version.snakeyaml '1.10'>
+  
+  <!ENTITY javafx.platform 'linux'>
 ]>-->
 
 <ivy-module version = '2.0'
@@ -78,13 +80,21 @@
     
     <dependency org = 'org.sandbox' name = 'intro_java-util' rev = '0.1.0'
         revConstraint = '[0.1.0,)'/>
-    <dependency org = 'javafx' name = 'jfxrt' rev = '2'
-        revConstraint = '2'>
-      <artifact type = 'jar'
-        url = "file://${javafx.home}/repo/javafx/jfxrt/2/jfxrt-2.jar"
-        name = 'jfxrt'/>
-      <!--<artifact type = 'jar' name = 'jfxrt'/>-->
+    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
+    <dependency org = 'org.openjfx' name = 'javafx-controls' rev = '11'
+        revConstraint = '[11,)'>
+      <!--<artifact type = 'jar'
+        url = "file://${javafx.home}/repo/org/openjfx/javafx-controls/11/javafx-controls-11.jar"
+        name = 'javafx-controls'/>-->
+      <artifact type = 'jar' name = 'javafx-controls'
+        m:classifier = '${javafx.platform}'/>
     </dependency>
+    <dependency org = 'org.openjfx' name = 'javafx-fxml' rev = '11'
+        revConstraint = '[11,)' m:classifier = '${javafx.platform}'/>
+    <dependency org = 'org.openjfx' name = 'javafx-base' rev = '11'
+        revConstraint = '[11,)' m:classifier = '${javafx.platform}'/>
+    <dependency org = 'org.openjfx' name = 'javafx-graphics' rev = '11'
+        revConstraint = '[11,)' m:classifier = '${javafx.platform}'/>
     <dependency org = 'org.sandbox' name = 'userifc_java-aux' rev = '0.1.0'
         revConstraint = '[0.1.0,)'/>
     

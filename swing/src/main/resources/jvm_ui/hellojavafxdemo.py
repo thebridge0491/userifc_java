@@ -162,6 +162,6 @@ if '__main__' == __name__:
   sys.exit(main(sys.argv[1:]))
 
 
-# jython -J-cp <path>/jfxrt.jar hellojavafxemo.py
+# JAVA_OPTS="--module-path=$JAVAFX_HOME/lib --add-modules=javafx.controls,javafx.fxml" jython [-J-cp <path>/pkg.jar] hellojavafxemo.py
 # or
-# java -cp <path>/jython-standalone.jar:<path>/jfxrt.jar org.python.util.jython hellojavafxdemo.py
+# java -cp <path>/jython-standalone.jar --module-path=$JAVAFX_HOME/lib --add-modules=javafx.controls,javafx.fxml org.python.util.jython hellojavafxdemo.py

@@ -35,6 +35,7 @@
     <maven.prereq>3.0.4</maven.prereq>
     
     <javafx.home>${env.JAVAFX_HOME}</javafx.home>
+    <javafx.platform>linux</javafx.platform>
     <project.package>org.sandbox.userifc_java.javafx</project.package>
   </properties>
   
@@ -122,11 +123,21 @@
       <artifactId>intro_java-util</artifactId>
       <version>0.1.0</version> </dependency>
     
-    <dependency> <groupId>javafx</groupId> <artifactId>jfxrt</artifactId>
-      <version>2</version>
+    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
+    <dependency> <groupId>org.openjfx</groupId> 
+      <artifactId>javafx-controls</artifactId> <version>11</version> 
       <!-- <scope>system</scope>
-      <systemPath>${javafx.home}/repo/javafx/jfxrt/2/jfxrt-2.jar</systemPath> -->
-    </dependency>
+      <systemPath>${javafx.home}/repo/org/openjfx/javafx-controls/11/javafx-controls-11.jar</systemPath> -->
+      <classifier>${javafx.platform}</classifier> </dependency>
+    <dependency> <groupId>org.openjfx</groupId> 
+      <artifactId>javafx-fxml</artifactId> <version>11</version>
+      <classifier>${javafx.platform}</classifier> </dependency>
+    <dependency> <groupId>org.openjfx</groupId> 
+      <artifactId>javafx-base</artifactId> <version>11</version>
+      <classifier>${javafx.platform}</classifier> </dependency>
+    <dependency> <groupId>org.openjfx</groupId> 
+      <artifactId>javafx-graphics</artifactId> <version>11</version>
+      <classifier>${javafx.platform}</classifier> </dependency>
     
     <dependency> <groupId>org.sandbox</groupId>
       <artifactId>userifc_java-aux</artifactId>
